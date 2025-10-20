@@ -5,72 +5,110 @@
     <meta charset="UTF-8">
     <title>Petit Lapin</title>
     <style>
-        body { 
-            background: #1a1a1a; 
-            color: white; 
-            font-family: Arial;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container { position: relative; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(7, 50px);
-            gap: 0;
-            border: 2px solid #333;
-        }
-        .cell {
-            width: 50px;
-            height: 50px;
-            background: #323232;
-            border: 1px solid #000;
-            position: relative;
-        }
-        .cell.wall { background: #dd2e44; }
-        .entity {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .rabbit { background: #ffeb3b; }
-        .fox { background: #00bcd4; }
-        .miam { background: #e91e63; }
-        .score {
-            text-align: center;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .game-over {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        .game-over.active { display: flex; }
-        .game-over h1 { color: #f44336; font-size: 48px; }
-        .game-over button {
-            padding: 15px 40px;
-            font-size: 20px;
-            background: #4caf50;
-            border: none;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-    </style>
+    /* ✅ Font 1 : Pour GAME OVER */
+    @font-face {
+        font-family: 'OurFriendElectric';
+        src: url('fonts/OurFriendElectric.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    /* ✅ Font 2 : Pour tout le reste */
+    @font-face {
+        font-family: 'SuiGeneris';
+        src: url('fonts/SuiGenerisRg.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    body { 
+        background: #1a1a1a; 
+        color: white; 
+        font-family: 'SuiGeneris', Arial, sans-serif;  /* ✅ Font par défaut */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container { position: relative; }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(7, 50px);
+        gap: 0;
+        border: 2px solid #333;
+    }
+    .cell {
+        width: 50px;
+        height: 50px;
+        background: #323232;
+        border: 1px solid #000;
+        position: relative;
+    }
+    .cell.wall { background: #dd2e44; }
+    .entity {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+    .rabbit { background: #ffeb3b; }
+    .fox { background: #00bcd4; }
+    .miam { background: #e91e63; }
+    
+    /* ✅ Score avec SuiGeneris */
+    .score {
+        font-family: 'SuiGeneris', Arial, sans-serif;
+        text-align: center;
+        font-size: 24px;
+        margin: 20px 0;
+    }
+    
+    .game-over {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .game-over.active { display: flex; }
+    
+    /* ✅ GAME OVER avec OurFriendElectric */
+    .game-over h1 { 
+        font-family: 'OurFriendElectric', monospace;
+        color: #f44336; 
+        font-size: 48px;
+        margin: 0;
+    }
+    
+    /* ✅ Score final avec SuiGeneris */
+    .game-over .score {
+        font-family: 'SuiGeneris', Arial, sans-serif;
+        color: #00bcd4;
+        font-size: 28px;
+        margin: 20px 0;
+    }
+    
+    /* ✅ Bouton avec SuiGeneris */
+    .game-over button {
+        font-family: 'SuiGeneris', Arial, sans-serif;
+        padding: 15px 40px;
+        font-size: 20px;
+        background: #4caf50;
+        border: none;
+        color: white;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+</style>
 </head>
 <body>
     <div class="container">
-        <div class="score">Score: <span id="score">0</span></div>
+        <div class="score"><span id="score">0</span></div>
         
         <div class="grid" id="grid" tabindex="0">
             <!-- Généré par JS -->
