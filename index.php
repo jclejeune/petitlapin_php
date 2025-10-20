@@ -255,7 +255,7 @@
             if (gameState && !isGameOver) {
                 fetchGame('moveFox');
             }
-        }, 300);
+        }, 500);
 
         // Reset
         async function resetGame() {
