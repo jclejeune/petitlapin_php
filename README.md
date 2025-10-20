@@ -6,3 +6,7 @@ Un jeu de labyrinthe en PHP vanilla. Évite le renard, mange les miams !
 
 ```bash
 php -S localhost:8000
+
+```
+
+

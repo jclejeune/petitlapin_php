@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Petit Lapin</title>
     <style>
-        /* ✅ Font 1 : Pour GAME OVER */
+        /* Font 1 : Pour GAME OVER */
         @font-face {
             font-family: 'OurFriendElectric';
             src: url('fonts/OurFriendElectric.otf') format('opentype');
@@ -14,7 +14,7 @@
             font-style: normal;
         }
 
-        /* ✅ Font 2 : Pour tout le reste */
+        /* Font 2 : Pour tout le reste */
         @font-face {
             font-family: 'SuiGeneris';
             src: url('fonts/SuiGenerisRg.otf') format('opentype');
@@ -35,6 +35,13 @@
         
         .container { 
             position: relative; 
+        }
+        
+        .score {
+            font-family: 'SuiGeneris', Arial, sans-serif;
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
         }
         
         .grid {
@@ -67,17 +74,10 @@
             text-align: center;
         }
         
-        .score {
-            font-family: 'SuiGeneris', Arial, sans-serif;
-            text-align: center;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        
         .game-over {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             justify-content: center;
             align-items: center;
@@ -92,14 +92,26 @@
             font-family: 'OurFriendElectric', monospace;
             color: #f44336; 
             font-size: 48px;
-            margin: 0;
+            margin: 0 0 20px 0;
         }
         
         .game-over .score {
             font-family: 'SuiGeneris', Arial, sans-serif;
             color: #00bcd4;
             font-size: 28px;
-            margin: 20px 0;
+            margin: 10px 0;
+        }
+        
+        .game-over .hi-score {
+            font-family: 'SuiGeneris', Arial, sans-serif;
+            font-size: 24px;
+            margin: 10px 0 20px 0;
+            color: #ffeb3b;
+            display: none;
+        }
+        
+        .game-over .hi-score.show {
+            display: block;
         }
         
         .game-over button {
@@ -116,7 +128,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="score"><span id="score">0</span></div>
+        <div class="score">Score: <span id="score">0</span></div>
         
         <div class="grid" id="grid" tabindex="0">
             <!-- Généré par JavaScript -->
@@ -125,6 +137,7 @@
         <div class="game-over" id="gameOver">
             <h1>GAME OVER</h1>
             <p class="score">Score: <span id="finalScore">0</span></p>
+            <p class="hi-score" id="hiScoreDisplay">Hi-Score: <span id="finalHiScore">0</span></p>
             <button onclick="resetGame(); return false;">RESTART</button>
         </div>
     </div>
@@ -173,24 +186,36 @@
                     if (gameState.rabbit.x === x && gameState.rabbit.y === y && !gameState.gameOver) {
                         div.innerHTML += '<div class="entity rabbit">🐰</div>';
                     }
-                     // Miam
+                    
+                    // Carotte
                     if (gameState.miam?.x === x && gameState.miam?.y === y) {
                         div.innerHTML += '<div class="entity miam">🥕</div>';
                     }
                     
-                    // Fox
+                    // Renard
                     if (gameState.fox.x === x && gameState.fox.y === y) {
                         div.innerHTML += '<div class="entity fox">🦊</div>';
                     }
-                    
-                   
                     
                     grid.appendChild(div);
                 });
             });
             
+            // Mettre à jour le score (pendant le jeu)
             document.getElementById('score').textContent = gameState.score;
+            
+            // Mettre à jour les scores dans le game over
             document.getElementById('finalScore').textContent = gameState.score;
+            document.getElementById('finalHiScore').textContent = gameState.hiScore;
+            
+            // Dans render()
+            const hiScoreDisplay = document.getElementById('hiScoreDisplay');
+            if (gameState.hiScore > 0) {
+                hiScoreDisplay.classList.add('show');
+            } else {
+                hiScoreDisplay.classList.remove('show');
+            }
+            
             document.getElementById('gameOver').className = 
                 'game-over' + (gameState.gameOver ? ' active' : '');
         }

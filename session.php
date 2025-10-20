@@ -1,13 +1,28 @@
 <?php
 session_start();
 
-// ✅ Initialiser le jeu si nécessaire
+// ✅ Charger le hi-score depuis un fichier
+function loadHiScore() {
+    $file = __DIR__ . '/hiscore.txt';
+    if (file_exists($file)) {
+        return (int)file_get_contents($file);
+    }
+    return 0;
+}
+
+// ✅ Sauvegarder le hi-score dans un fichier
+function saveHiScore($score) {
+    $file = __DIR__ . '/hiscore.txt';
+    file_put_contents($file, $score);
+}
+
 if (!isset($_SESSION['game'])) {
     $_SESSION['game'] = [
         'rabbit' => ['x' => 3, 'y' => 10],
         'fox' => ['x' => 3, 'y' => 0],
         'miam' => null,
         'score' => 0,
+        'hiScore' => loadHiScore(),
         'gameOver' => false,
         'grid' => [
             [0,0,0,0,0,0,0],
@@ -26,11 +41,10 @@ if (!isset($_SESSION['game'])) {
 }
 
 function getGame() {
-    return $_SESSION['game'] ?? null;  // ✅ Protection si null
+    return $_SESSION['game'] ?? null;
 }
 
 function updateGame($data) {
-    // ✅ FIX : Vérifier que $_SESSION['game'] existe
     if (!isset($_SESSION['game'])) {
         $_SESSION['game'] = [];
     }
@@ -38,12 +52,14 @@ function updateGame($data) {
 }
 
 function resetGame() {
-    // ✅ FIX : Ne pas appeler session_start() à nouveau !
+    $hiScore = $_SESSION['game']['hiScore'] ?? loadHiScore();
+    
     $_SESSION['game'] = [
         'rabbit' => ['x' => 3, 'y' => 10],
         'fox' => ['x' => 3, 'y' => 0],
         'miam' => null,
         'score' => 0,
+        'hiScore' => $hiScore,
         'gameOver' => false,
         'grid' => [
             [0,0,0,0,0,0,0],

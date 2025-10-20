@@ -6,14 +6,24 @@ header('Content-Type: application/json');
 $action = $_POST['action'] ?? $_GET['action'] ?? null;
 $game = getGame();
 
-// ✅ FIX : Vérification globale du gameOver
+
+function updateHiScore(&$game) {
+    $isNewRecord = false;
+    if ($game['score'] > $game['hiScore']) {
+        $game['hiScore'] = $game['score'];
+        saveHiScore($game['hiScore']);
+        $isNewRecord = true;
+    }
+    $game['isNewRecord'] = $isNewRecord;
+}
+
+// Vérification globale du gameOver
 if ($game['gameOver'] && $action !== 'reset' && $action !== 'init') {
-    // Si le jeu est fini, on refuse TOUTE action sauf reset
     echo json_encode($game);
     exit;
 }
 
-// ✅ Fonction de comparaison fiable
+// Fonction de comparaison fiable
 function samePosition($pos1, $pos2) {
     if (!$pos1 || !$pos2) return false;
     return $pos1['x'] === $pos2['x'] && $pos1['y'] === $pos2['y'];
@@ -45,9 +55,8 @@ function distance($p1, $p2) {
     return sqrt(pow($p1['x'] - $p2['x'], 2) + pow($p1['y'] - $p2['y'], 2));
 }
 
-// ✅ Déplacer le lapin - AVEC DOUBLE VÉRIFICATION
+// Déplacer le lapin
 if ($action === 'move') {
-    // ✅ PROTECTION 1 : Vérifier gameOver
     if ($game['gameOver']) {
         echo json_encode($game);
         exit;
@@ -74,15 +83,16 @@ if ($action === 'move') {
     if (canMove($newX, $newY, $game['grid'])) {
         $game['rabbit'] = ['x' => $newX, 'y' => $newY];
         
-        // ✅ Vérifier collision AVANT de manger le miam
+        // Vérifier collision AVANT de manger le miam
         if (samePosition($game['rabbit'], $game['fox'])) {
             $game['gameOver'] = true;
+            updateHiScore($game);
             updateGame($game);
             echo json_encode($game);
-            exit;  // ✅ EXIT immédiatement, pas de points !
+            exit;
         }
         
-        // ✅ Vérifier si on mange le miam (seulement si pas mort)
+        // Vérifier si on mange le miam
         if (samePosition($game['rabbit'], $game['miam'])) {
             $game['score'] += 50;
             $game['miam'] = spawnMiam($game);
@@ -92,9 +102,8 @@ if ($action === 'move') {
     }
 }
 
-// ✅ Déplacer le renard
+// Déplacer le renard
 if ($action === 'moveFox') {
-    // ✅ PROTECTION : Ne pas bouger si gameOver
     if ($game['gameOver']) {
         echo json_encode($game);
         exit;
@@ -123,9 +132,10 @@ if ($action === 'moveFox') {
         
         $game['fox'] = $bestMove;
         
-        // ✅ Vérifier collision
+        // Vérifier collision
         if (samePosition($game['rabbit'], $game['fox'])) {
             $game['gameOver'] = true;
+            updateHiScore($game);
         }
         
         updateGame($game);
@@ -140,7 +150,7 @@ if ($action === 'init') {
     }
 }
 
-// ✅ Reset
+// Reset
 if ($action === 'reset') {
     resetGame();
     $game = getGame();
