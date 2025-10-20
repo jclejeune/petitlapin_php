@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Rabbit Game - PHP Vanilla</title>
+    <title>Petit Lapin</title>
     <style>
         body { 
             background: #1a1a1a; 
@@ -79,7 +79,7 @@
         <div class="game-over" id="gameOver">
             <h1>GAME OVER</h1>
             <p class="score">Score: <span id="finalScore">0</span></p>
-            <button onclick="resetGame()">RESTART (SPACE)</button>
+            <button onclick="resetGame()">RESET</button>
         </div>
     </div>
 
